@@ -9,13 +9,19 @@ class Playlist:
         self.id = id
         self.songs = {song.id: song for song in songs}
 
-    def add_songs(self, *songs: list[Song]):
+    def add(self, *songs: list[Song]):
         for song in songs:
             self.songs[song.id] = song
 
-    def remove_songs(self, *songs: list[Song]):
+    def remove(self, *songs: list[Song]):
         for song in songs:
             self.songs.pop(song.id, None) # remove song if it exists, do nothing if it doesn't
 
+    def clear(self):
+        self.songs = {}
+
     def get_songs(self) -> list[Song]:
         return list(self.songs.values())
+    
+    def __call__(self, *args, **kwds):
+        return self

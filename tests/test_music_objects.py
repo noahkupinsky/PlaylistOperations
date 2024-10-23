@@ -13,12 +13,17 @@ def test_playlist_init():
 
 def test_playlist_add_songs():
     playlist = Playlist("playlist", "playlist_id", [Song("song", 1)])
-    playlist.add_songs(Song("new_song", 2))
-    playlist.add_songs(Song("new_song", 2)) # do nothing if song already exists
+    playlist.add(Song("new_song", 2))
+    playlist.add(Song("new_song", 2)) # do nothing if song already exists
     assert [song.id for song in playlist.get_songs()] == [1, 2]
 
 def test_playlist_remove_songs():
     playlist = Playlist("playlist", "playlist_id", [Song("song", 1), Song("new_song", 2)])
-    playlist.remove_songs(Song("song", 1))
-    playlist.remove_songs(Song("song", 1)) # do nothing if song doesn't exist``
+    playlist.remove(Song("song", 1))
+    playlist.remove(Song("song", 1)) # do nothing if song doesn't exist``
     assert [song.id for song in playlist.get_songs()] == [2]
+
+# calling a playlist should return itself, for use with playlist operations and lazy loading
+def test_playlist_call():
+    playlist = Playlist("playlist", "playlist_id", [Song("song", 1)])
+    assert playlist() == playlist
