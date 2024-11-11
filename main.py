@@ -1,10 +1,13 @@
 from package.spotify_service import SpotifyService
+from package.playlist_operator import PlaylistOperator
 
 if __name__ == "__main__":
     spotify_service = SpotifyService()
     playlists = spotify_service.get_playlists()
-    absolute_jams = [playlist for playlist in playlists if playlist.name == "Absolute Jams"][0]
-    songs = absolute_jams.get_songs()
-    print(len(songs))
-    for song in songs:
-        print(str(song))
+
+    playlist_operator = PlaylistOperator(playlists)
+    operated_on = playlist_operator.operate()
+
+    for playlist in operated_on:
+        spotify_service.update_playlist(playlist)
+    

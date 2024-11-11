@@ -79,3 +79,14 @@ class SpotifyService:
 
         # Use the paginator HOF to fetch and process all songs in the playlist
         return self._paginate(lambda limit, offset: self.sp.playlist_tracks(playlist_id, limit=limit, offset=offset), process_song_item)
+    
+    def update_playlist(self, playlist: Playlist):
+        playlist_id = playlist.id
+        # clear playlist
+        self.sp.playlist_replace_items(playlist_id, [])
+        # get uris and split into batches of 100
+        song_uris = [f"spotify:track:{song.id}" for song in playlist.get_songs()]
+        batches = [song_uris[i:i+100] for i in range(0, len(song_uris), 100)]
+        # add each batch
+        for batch in batches:
+            self.sp.playlist_add_items(playlist_id, batch)

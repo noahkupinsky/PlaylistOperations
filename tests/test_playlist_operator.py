@@ -11,14 +11,23 @@ def test_playlist_operator():
     pE = Playlist(name="E", id="E", description=" [R0]", songs=[Song("s5", 5), Song("s4", 4)])
     playlists = [pA, pB, pC, pD, pE]
     playlist_operator = PlaylistOperator(playlists)
-    playlist_operator.operate()
+    operated_on = playlist_operator.operate()
     songs = [song.id for song in pC.get_songs()]
     songs.sort()
     assert songs == [1, 6]
+    assert len(operated_on) == 1
+    assert operated_on[0] == pC
 
 def test_playlist_operator_errors():
     # prevent multiple key tokens
     with pytest.raises(ValueError):
         pA = Playlist(name="A", id="A", description="[K0 K1]", songs=[Song("s1", 1), Song("s2", 2), Song("s4", 4)])
+        playlist_operator = PlaylistOperator([pA])
+        playlist_operator.operate()
+
+def test_playlist_operator_errors():
+    # prevent key tokens being found with other tokens
+    with pytest.raises(ValueError):
+        pA = Playlist(name="A", id="A", description="[K0 A1]", songs=[Song("s1", 1), Song("s2", 2), Song("s4", 4)])
         playlist_operator = PlaylistOperator([pA])
         playlist_operator.operate()

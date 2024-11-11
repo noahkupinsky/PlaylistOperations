@@ -33,6 +33,8 @@ class PlaylistOperator:
             key_set_tokens = list(filter(lambda token: token[0] == "K", tokens))
             if len(key_set_tokens) > 1:
                 raise ValueError("Multiple key tokens found")
+            if len(key_set_tokens) == 1 and len(tokens) > 1:
+                raise ValueError("Key token found with other tokens")
             
             for token in tokens:
                 self._parse_token(token, playlist)
@@ -41,3 +43,5 @@ class PlaylistOperator:
         
         for operation in self.operations:
             operation.execute()
+
+        return list(self.playlist_dict.values())
