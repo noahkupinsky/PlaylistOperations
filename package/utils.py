@@ -24,14 +24,14 @@ def extract_outermost_brackets_content(s):
 
     # If stack is not empty after processing, there are unmatched opening brackets
     if stack:
-        raise ValueError("Unmatched opening bracket at position {}".format(stack[-1]))
+        return []
 
     return results
 
 def lex_operation_tokens(string: str) -> list[Token]:
     # match regex for anything inside square brackets
     square_brackets_content = extract_outermost_brackets_content(string)
-    
+
     if len(square_brackets_content) == 0 or len(square_brackets_content) > 1:
         return []
     
@@ -41,7 +41,7 @@ def lex_operation_tokens(string: str) -> list[Token]:
     # match capital letter and number sequences
     tokens_match = re.match(r"^([A-Z][0-9]+(\s*,?\s*))*$", tokens_block)
     if not tokens_match:
-        raise ValueError("Invalid metadata format - invalid token format")
+        return []
     token_strings = re.findall(r"[A-Z][0-9]+", tokens_block)
 
     # convert tokens to tuples
