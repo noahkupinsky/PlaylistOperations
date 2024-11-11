@@ -8,7 +8,7 @@ I found myself wishing there was a spotify feature that allowed me to designate 
 2) Create a spotify dev project (for web API) at https://developer.spotify.com. You probably want your redirect uri to be http://localhost:8888/callback for easy auth.
 3) Add your **SPOTIFY_CLIENT_ID**, **SPOTIFY_CLIENT_SECRET**, and **SPOTIFY_REDIRECT_URI** to the env file.
 4) Edit your playlist descriptions to set up your operations (see details below).
-5) Run *main.py* (you'll be directed to a page where you need to click agree to use the Spotify API, but you'll only have to do this once ever).
+5) Run *main.py*. You'll be directed to a page where you need to click agree to use the Spotify API, but you'll only have to do this once ever.
 6) (Optional) Set up a cron job or similar to run the script daily, so your playlists stay updated (ask John Google or Chad GPT about what'd be best for your OS)
 
 ## Details
