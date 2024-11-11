@@ -22,6 +22,8 @@ def test_get_operation_tokens():
     assert lex_operation_tokens("test [A0,B1]") == [("A", 0), ("B", 1)]
     assert lex_operation_tokens("test [A0 ,B1]") == [("A", 0), ("B", 1)]
     assert lex_operation_tokens("test [A0 ,  B1]") == [("A", 0), ("B", 1)]
+    # you are allowed whitespace wherever
+    assert lex_operation_tokens("test [ A 0 ,  B 1]") == [("A", 0), ("B", 1)]
     # numbers should be able to be multiple digits
     assert lex_operation_tokens("test [A0B1C12]") == [("A", 0), ("B", 1), ("C", 12)]
         

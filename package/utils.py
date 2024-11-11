@@ -38,8 +38,11 @@ def lex_operation_tokens(string: str) -> list[Token]:
     tokens_block = square_brackets_content[0]
     print(tokens_block)
 
+    # remove whitespace
+    tokens_block = re.sub(r"\s+", "", tokens_block)
+
     # match capital letter and number sequences
-    tokens_match = re.match(r"^([A-Z][0-9]+(\s*,?\s*))*$", tokens_block)
+    tokens_match = re.match(r"^([A-Z][0-9]+,?)*$", tokens_block)
     if not tokens_match:
         return []
     token_strings = re.findall(r"[A-Z][0-9]+", tokens_block)
