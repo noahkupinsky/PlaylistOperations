@@ -2,7 +2,15 @@
 
 I found myself wishing there was a spotify feature that allowed me to designate a playlist as the combination of two others or similar, so I made it.
 
-## Premise
+## Setup:
+
+1) Clone the repo, make sure you've installed the libraries in *requirements.txt*, and make a *.env* file in the project root.
+2) Create a spotify dev project (for web API) at https://developer.spotify.com. You probably want your redirect uri to be http://localhost:8888/callback for easy auth.
+3) Add your **SPOTIFY_CLIENT_ID**, **SPOTIFY_CLIENT_SECRET**, and **SPOTIFY_REDIRECT_URI** to the env file.
+4) Edit your playlist descriptions to set up your operations (see details below).
+5) Run *main.py* (you'll be directed to a page where you need to click agree to use the Spotify API, but you'll only have to do this once ever).
+
+## Details
 Operations are created by denoting a particular playlist as the result of a group of operations *i*, and other playlists as contributors to that group. This will become clearer below.
 
 Operations are deduced from the descriptions of the playlists on your spotify account. Each playlist may have a pair of square brackets, within which the playlist's operation commands are defined. 
