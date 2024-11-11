@@ -3,10 +3,14 @@ class Song:
         self.name = name
         self.id = id
 
+    def __str__(self):
+        return f"{self.name} ({self.id})"
+
 class Playlist:
-    def __init__(self, name: str, id: any, songs: list[Song]):
+    def __init__(self, name: str, id: any, description: str, songs: list[Song]):
         self.name = name
         self.id = id
+        self.description = description
         self.songs = {song.id: song for song in songs}
 
     def add(self, *songs: list[Song]):

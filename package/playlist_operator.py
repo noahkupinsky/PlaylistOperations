@@ -28,7 +28,7 @@ class PlaylistOperator:
 
     def operate(self):
         for playlist in self.playlists:
-            tokens = lex_operation_tokens(playlist.name)
+            tokens = lex_operation_tokens(playlist.description)
 
             key_set_tokens = list(filter(lambda token: token[0] == "K", tokens))
             if len(key_set_tokens) > 1:

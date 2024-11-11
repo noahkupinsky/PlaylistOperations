@@ -1,9 +1,8 @@
-from abc import ABC, abstractmethod
+from package.music_objects import Playlist, Song
 import os
 from dotenv import load_dotenv
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth, CacheFileHandler
-from package.music_objects import Playlist, Song
 
 # Load environment variables from .env file
 load_dotenv()
@@ -60,7 +59,12 @@ class SpotifyService:
             # Only process if the playlist is owned by the user
             if self._is_owned_by_user(playlist_data):
                 songs = self._get_songs_for_playlist(playlist_data['id'])
-                return Playlist(name=playlist_data['name'], id=playlist_data['id'], songs=songs)
+                return Playlist(
+                    name=playlist_data['name'], 
+                    id=playlist_data['id'], 
+                    description=playlist_data['description'],
+                    songs=songs
+                    )
             return None  # Skip if not owned by user
 
         # Use the paginator HOF to fetch and process all user playlists

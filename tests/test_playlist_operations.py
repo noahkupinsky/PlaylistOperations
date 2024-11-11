@@ -2,8 +2,11 @@ import pytest
 from package.playlist_operations import PlaylistOperation, PlaylistOperationAdd, PlaylistOperationRemove
 from package.music_objects import Playlist, Song
 
+def create_test_playlist(name, songs):
+    return Playlist(name=name, id=name, description=name, songs=songs)
+
 def test_load_playlists():
-    playlist_loaders = [Playlist("from", "from", [Song("song", 1)]), Playlist("to", "to", [])]
+    playlist_loaders = [create_test_playlist("from", []), create_test_playlist("to", [])]
     operation = PlaylistOperation(*playlist_loaders)
     playlists = operation.load_playlists()
     assert [playlist.name for playlist in playlists] == ["from", "to"]
@@ -22,28 +25,28 @@ def test_lazy_loading():
     operation = PlaylistOperation(playlist_loader)
 
     # add playlists to dictionary
-    playlists["key"] = Playlist(name="playlist", id="id", songs=[Song(name="song", id=1)])
+    playlists["key"] = create_test_playlist('test', [Song(name="song", id=1)])
 
     [playlist] = operation.load_playlists()
     assert [song.id for song in playlist.get_songs()] == [1]
 
 def test_add_operation():
-    playlist_from = Playlist(name="from", id="from", songs=[Song(name="song", id=1)])
-    playlist_to = Playlist(name="to", id="to", songs=[])
+    playlist_from = create_test_playlist('from', [Song(name="song", id=1)])
+    playlist_to = create_test_playlist('to', [])
     operation = PlaylistOperationAdd(playlist_from, playlist_to)
     operation.execute()
     assert [song.id for song in playlist_to.get_songs()] == [1]
 
 def test_remove_operation():
-    playlist_from = Playlist(name="from", id="from", songs=[Song(name="song", id=1)])
-    playlist_to = Playlist(name="to", id="to", songs=[Song(name="song", id=1)])
+    playlist_from = create_test_playlist('from', [Song(name="song", id=1)])
+    playlist_to = create_test_playlist('to', [Song(name="song", id=1)])
     operation = PlaylistOperationRemove(playlist_from, playlist_to)
     operation.execute()
     assert [song.id for song in playlist_to.get_songs()] == []
 
 def test_operation_precedence():
-    playlist_from = Playlist(name="from", id="from", songs=[Song(name="song", id=1)])
-    playlist_to = Playlist(name="to", id="to", songs=[])
+    playlist_from = create_test_playlist('from', [Song(name="song", id=1)])
+    playlist_to = create_test_playlist('to', [])
     add_operation = PlaylistOperationAdd(playlist_from, playlist_to)
     remove_operation = PlaylistOperationRemove(playlist_from, playlist_to)
     operation_list = [remove_operation, add_operation]

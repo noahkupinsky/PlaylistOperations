@@ -45,7 +45,12 @@ def test_paginate(mock_spotify, mock_spotify_oauth):
     assert isinstance(result[2], Song)
 
 # Generate mock data for playlists and songs
-mock_playlists_data = [{'name': f'Playlist {i+1}', 'id': f'playlist_{i+1}', 'owner': {'id': 'mock_user_id'}} for i in range(51)]
+mock_playlists_data = [{
+    'name': f'Playlist {i+1}', 
+    'id': f'playlist_{i+1}', 
+    'description': f'Description {i+1}', 
+    'owner': {'id': 'mock_user_id'}
+    } for i in range(51)]
 mock_tracks_data = [{'track': {'name': f'Song {i+1}', 'id': f'song_{i+1}'}} for i in range(51)]
 
 @patch("package.spotify_service.SpotifyOAuth")
