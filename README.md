@@ -137,6 +137,8 @@ Playlist Y description: "\[K1\]"
 
 Playlist Z description: "\[A0\]"
 
+Error: K0 must be alone
+
 ### 2)
 
 Playlist X description: "\[K0\]"
@@ -144,5 +146,7 @@ Playlist X description: "\[K0\]"
 Playlist Y description: "\[A1\]"
 
 Playlist Z description: "\[A0\]"
+
+Error: no K1 found
 
 
