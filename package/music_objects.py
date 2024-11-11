@@ -1,3 +1,5 @@
+from package.utils import lex_operation_tokens, Token
+
 class Song:
     def __init__(self, name: str, id: any):
         self.name = name
@@ -23,6 +25,9 @@ class Playlist:
 
     def clear(self):
         self.songs = {}
+
+    def get_operation_tokens(self) -> list[Token]:
+        return lex_operation_tokens(self.description)
 
     def get_songs(self) -> list[Song]:
         return list(self.songs.values())

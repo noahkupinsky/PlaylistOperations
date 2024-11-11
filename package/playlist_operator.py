@@ -1,6 +1,6 @@
 from package.music_objects import Playlist
 from package.playlist_operations import *
-from package.utils import lex_operation_tokens, Token
+from package.utils import Token
 
 class PlaylistOperator:
     def __init__(self, playlists: list[Playlist]):
@@ -8,7 +8,7 @@ class PlaylistOperator:
         self.playlists = playlists
         self.operations = []
 
-    def parse_token(self, token: Token, playlist: Playlist):
+    def _parse_token(self, token: Token, playlist: Playlist):
         token_letter, token_number = token
         # setting key for playlist
         if token_letter == "K":
@@ -28,14 +28,14 @@ class PlaylistOperator:
 
     def operate(self):
         for playlist in self.playlists:
-            tokens = lex_operation_tokens(playlist.description)
+            tokens = playlist.get_operation_tokens()
 
             key_set_tokens = list(filter(lambda token: token[0] == "K", tokens))
             if len(key_set_tokens) > 1:
                 raise ValueError("Multiple key tokens found")
             
             for token in tokens:
-                self.parse_token(token, playlist)
+                self._parse_token(token, playlist)
 
         self.operations.sort()
         
