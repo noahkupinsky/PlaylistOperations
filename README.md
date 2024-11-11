@@ -12,6 +12,7 @@ I found myself wishing there was a spotify feature that allowed me to designate 
 6) (Optional) Set up a cron job or similar to run the script daily, so your playlists stay updated (ask John Google or Chad GPT about what'd be best for your OS)
 
 ## Details
+#### There's a lot of text here for the sake of thoroughness. It's not as scary as it looks, I promise. Maybe take a look at the examples first.
 Operations are created by denoting a particular playlist as the result of a group of operations *i*, and other playlists as contributors to that group. This will become clearer below.
 
 Operations are deduced from the descriptions of the playlists on your spotify account. Each playlist may have a pair of square brackets, within which the playlist's operation commands are defined. 
