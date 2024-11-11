@@ -2,79 +2,76 @@ from abc import ABC, abstractmethod
 import os
 from dotenv import load_dotenv
 import spotipy
-from spotipy.oauth2 import SpotifyOAuth
+from spotipy.oauth2 import SpotifyOAuth, CacheFileHandler
+from package.music_objects import Playlist, Song
 
 # Load environment variables from .env file
 load_dotenv()
 
-class BaseSpotifyService(ABC):
+class SpotifyService:
     def __init__(self):
-        """
-        Initialize the class and set up the Spotify instance and user ID.
-        """
         self.sp = self._create_spotify_instance()
         self.user_id = self._get_user_id()
 
-    @abstractmethod
     def _create_spotify_instance(self):
-        """
-        Create and return a Spotify instance with proper authentication.
-        """
-        pass
+        cache_handler = CacheFileHandler(cache_path="../.cache")  # Adjust this path as needed
 
-    @abstractmethod
-    def _get_user_id(self):
-        """
-        Retrieve and return the user ID of the authenticated user.
-        """
-        pass
-
-    @abstractmethod
-    def get_playlists(self):
-        """
-        Retrieve and return all playlists owned by the authenticated user, handling pagination.
-        """
-        pass
-
-    def _is_owned_by_user(self, playlist):
-        """
-        Check if a playlist is owned by the user.
-        """
-        return playlist.get('owner', {}).get('id') == self.user_id
-
-
-class SpotifyService(BaseSpotifyService):
-    def _create_spotify_instance(self):
-        """
-        Initialize the Spotify instance with proper authentication.
-        """
         return spotipy.Spotify(auth_manager=SpotifyOAuth(
             client_id=os.getenv("SPOTIFY_CLIENT_ID"),
             client_secret=os.getenv("SPOTIFY_CLIENT_SECRET"),
             redirect_uri=os.getenv("SPOTIFY_REDIRECT_URI"),
-            scope="playlist-modify-public playlist-modify-private playlist-read-private"
+            scope="playlist-modify-public playlist-modify-private playlist-read-private",
+            cache_handler=cache_handler  # Path to cache file
         ))
+    
+    def _is_owned_by_user(self, playlist):
+        return playlist.get('owner', {}).get('id') == self.user_id
 
     def _get_user_id(self):
-        """
-        Retrieve the user ID of the authenticated user.
-        """
         user_profile = self.sp.current_user()
         return user_profile['id']
+    
+    def _paginate(self, getter, item_processor, limit=50):
+        offset = 0
+        items = []
 
+        # Make the initial call to get the total count
+        results = getter(limit=limit, offset=offset)
+        total = results.get('total', 0)
+
+        while offset < total:
+            # Process each item in the current page
+            for item in results['items']:
+                processed_item = item_processor(item)
+                if processed_item:
+                    items.append(processed_item)
+
+            # Update offset to fetch the next page
+            offset += limit
+
+            # Fetch the next page if we haven’t reached the total count
+            if offset < total:
+                results = getter(limit=limit, offset=offset)
+
+        return items
+    
     def get_playlists(self):
-        """
-        Retrieve all playlists owned by the authenticated user.
-        """
-        playlists = []
-        results = self.sp.current_user_playlists(limit=50)
-        playlists.extend(results['items'])
+        def process_playlist_item(playlist_data):
+            # Only process if the playlist is owned by the user
+            if self._is_owned_by_user(playlist_data):
+                songs = self._get_songs_for_playlist(playlist_data['id'])
+                return Playlist(name=playlist_data['name'], id=playlist_data['id'], songs=songs)
+            return None  # Skip if not owned by user
 
-        # Paginate through all playlists
-        while results['next']:
-            results = self.sp.next(results)
-            playlists.extend(results['items'])
+        # Use the paginator HOF to fetch and process all user playlists
+        return self._paginate(self.sp.current_user_playlists, process_playlist_item)
 
-        # Filter to only include playlists owned by the user
-        user_owned_playlists = [playlist for playlist in playlists if self._is_owned_by_user(playlist)]
-        return user_owned_playlists
+    def _get_songs_for_playlist(self, playlist_id):
+        def process_song_item(item):
+            track = item.get('track')
+            if track:
+                return Song(name=track['name'], id=track['id'])
+            return None  # Skip if track is missing
+
+        # Use the paginator HOF to fetch and process all songs in the playlist
+        return self._paginate(lambda limit, offset: self.sp.playlist_tracks(playlist_id, limit=limit, offset=offset), process_song_item)
