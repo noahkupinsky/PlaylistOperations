@@ -4,6 +4,8 @@ from package.utils import lex_operation_tokens
 def test_get_operation_tokens():
     # no square brackets should return no tokens
     assert lex_operation_tokens("test") == []
+    # multiple square brackets should return no tokens
+    assert lex_operation_tokens("test [A0] [B1]") == []
     # empty square brackets should return no tokens
     assert lex_operation_tokens("test []") == []
     # valid square brackets with one token should return the token
@@ -21,4 +23,4 @@ def test_get_operation_tokens():
     with pytest.raises(ValueError):
         lex_operation_tokens("test [A0B1C]")
     with pytest.raises(ValueError):
-        lex_operation_tokens("test [A0] []")
+        lex_operation_tokens("test [A0B[1C1]")
