@@ -1,6 +1,6 @@
 # Playlist Operations
 
-I found myself wishing there was a spotify feature that allowed me to designate a playlist as the combination of two others or similar, so I made it.
+I found myself wishing there was a spotify feature that allowed me to designate a playlist as some combination of other playlists, so I made it.
 
 ## Setup:
 
