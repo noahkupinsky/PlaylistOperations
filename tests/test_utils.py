@@ -24,3 +24,5 @@ def test_get_operation_tokens():
         lex_operation_tokens("test [A0B1C]")
     with pytest.raises(ValueError):
         lex_operation_tokens("test [A0B[1C1]")
+    with pytest.raises(ValueError):
+        lex_operation_tokens("test [A0B[1C]1]")
