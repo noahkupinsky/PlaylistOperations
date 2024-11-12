@@ -36,7 +36,6 @@ def lex_operation_tokens(string: str) -> list[Token]:
         return []
     
     tokens_block = square_brackets_content[0]
-    print(tokens_block)
 
     # remove whitespace
     tokens_block = re.sub(r"\s+", "", tokens_block)
