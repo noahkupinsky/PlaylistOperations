@@ -21,7 +21,7 @@ class SpotifyService:
             redirect_uri=os.getenv("SPOTIFY_REDIRECT_URI"),
             scope="playlist-modify-public playlist-modify-private playlist-read-private",
             cache_handler=cache_handler  # Path to cache file
-        ))
+        ), requests_timeout=15)
     
     def _is_owned_by_user(self, playlist):
         return playlist.get('owner', {}).get('id') == self.user_id
